@@ -35,8 +35,8 @@ class Game:
 
             if noAtom >= limit:
                 noAtom = noAtom % limit
-                coord = np.where(self.board == frontCell)
-                y,x = int(coord[0]),int(coord[1])
+                coords = np.where(self.board == frontCell)
+                y,x = int(coords[0][0]),int(coords[1][0])
                 if x - 1 >= 0:
                     cell = self.board[y][x-1]
                     cell.numberOfAtoms += 1
@@ -55,21 +55,21 @@ class Game:
                     queue.append(cell)
             
             self.updateCell(frontCell,noAtom)
-            sleep(0.5)
-            self.renderBoard();
+            #sleep(0.5)
+            #self.renderBoard();
 
 
-    def addAtom(self):
-        coord = input("\nEnter cell: ").split(',')
+    def addAtom(self,coord:list[str]):
         x,y = int(coord[0]),int(coord[1])
         cell = self.board[y - 1][x - 1]
-        self.updateCell(cell,cell.numberOfAtoms + 1)
+        self.updateCell(cell=cell,atom=cell.numberOfAtoms + 1)
         self.checkCellReaction(cell)
 
     def start(self):
         while True:
             self.renderBoard()
-            self.addAtom()
+            coord = input("\nEnter cell: ").split(',')
+            self.addAtom(coord)
 
 def main():
     game = Game()

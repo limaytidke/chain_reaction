@@ -8,15 +8,14 @@
 		</title>
 		<link rel="stylesheet" type="" href="static/style.css">
 	</head>
-	<body>
-        Hello World <br>
-		{% block content %}
-		{% for row in board %}
-		{% for col in row %}
-        {{ col.numberOfAtoms }} 
-		{% endfor %}
-        <br>
-		{% endfor %}
-		{% endblock %}
+	<body class="yes">
+		Hello World<br>
+        <div class="game">
+        </div>
+		<button type="button" onclick="updateBoard()">
+			button
+        </button><br><br>
+		<script src="static/call.js">
+		</script>
 	</body>
 </html>

@@ -3,3 +3,8 @@ body {
     color: #ffffff;
     height: 100%;
 }
+
+button {
+    height: 100px;
+    width: 200px;
+}
