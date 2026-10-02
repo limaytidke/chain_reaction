@@ -16,7 +16,7 @@ class Coords(BaseModel):
     col: str
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
+def home(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/board")
@@ -25,7 +25,7 @@ def board():
     return { "board" : gameBoard }
 
 @app.post("/sendCoord")
-async def updateCell(coords: Coords):
+def updateCell(coords: Coords):
     game.addAtom([coords.row,coords.col])
     gameBoard = [[ game.board[i][j].numberOfAtoms for j in range(game.width)] for i in range(game.height)]
     return { "updatedBoard" : gameBoard }

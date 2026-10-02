@@ -1,6 +1,7 @@
 import sys
 from time import sleep
 import numpy as np
+from collections import deque
 
 class Cell:
     numberOfAtoms:int = 0
@@ -26,35 +27,27 @@ class Game:
     def updateCell(self,cell,atom):
         cell.numberOfAtoms = atom;
 
-    def checkCellReaction(self,cell):
-        queue = [cell]
-        while len(queue) > 0:
-            frontCell = queue[0]
-            queue.remove(frontCell)
-            noAtom,limit = frontCell.numberOfAtoms,frontCell.atomLimit
-
+    def checkCellReaction(self, cell, y, x):
+        queue = deque([(cell, y, x)])
+     
+        max_iterations = self.width * self.height * 10
+        while queue and max_iterations > 0:
+            max_iterations -= 1  
+            frontCell, y, x = queue.popleft()
+            noAtom, limit = frontCell.numberOfAtoms, frontCell.atomLimit
+        
             if noAtom >= limit:
                 noAtom = noAtom % limit
-                coords = np.where(self.board == frontCell)
-                y,x = int(coords[0][0]),int(coords[1][0])
-                if x - 1 >= 0:
-                    cell = self.board[y][x-1]
-                    cell.numberOfAtoms += 1
-                    queue.append(cell)
-                if x + 1 < self.width:
-                    cell = self.board[y][x+1]
-                    cell.numberOfAtoms += 1
-                    queue.append(cell)
-                if y - 1 >= 0:
-                    cell = self.board[y-1][x]
-                    cell.numberOfAtoms += 1
-                    queue.append(cell)
-                if y + 1 < self.height:
-                    cell = self.board[y+1][x]
-                    cell.numberOfAtoms += 1
-                    queue.append(cell)
-            
+                neighbors = [
+                    (y, x-1), (y, x+1), (y-1, x), (y+1, x)
+                ]
+                for ny, nx in neighbors:
+                    if 0 <= ny < self.height and 0 <= nx < self.width:
+                        ncell:Cell = self.board[ny][nx]
+                        ncell.numberOfAtoms += 1
+                        queue.append((ncell, ny, nx))
             self.updateCell(frontCell,noAtom)
+        
             #sleep(0.5)
             #self.renderBoard();
 
@@ -63,7 +56,7 @@ class Game:
         x,y = int(coord[0]),int(coord[1])
         cell = self.board[y - 1][x - 1]
         self.updateCell(cell=cell,atom=cell.numberOfAtoms + 1)
-        self.checkCellReaction(cell)
+        self.checkCellReaction(cell,y - 1,x - 1)
 
     def start(self):
         while True:
