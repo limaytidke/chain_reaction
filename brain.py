@@ -28,25 +28,20 @@ class Game:
         cell.numberOfAtoms = atom;
 
     def checkCellReaction(self, cell, y, x):
-        queue = deque([(cell, y, x)])
-     
-        max_iterations = self.width * self.height * 10
-        while queue and max_iterations > 0:
-            max_iterations -= 1  
-            frontCell, y, x = queue.popleft()
-            noAtom, limit = frontCell.numberOfAtoms, frontCell.atomLimit
+        frontCell:Cell = cell
+        noAtom, limit = frontCell.numberOfAtoms, frontCell.atomLimit
         
-            if noAtom >= limit:
-                noAtom = noAtom % limit
-                neighbors = [
-                    (y, x-1), (y, x+1), (y-1, x), (y+1, x)
-                ]
-                for ny, nx in neighbors:
-                    if 0 <= ny < self.height and 0 <= nx < self.width:
-                        ncell:Cell = self.board[ny][nx]
-                        ncell.numberOfAtoms += 1
-                        queue.append((ncell, ny, nx))
-            self.updateCell(frontCell,noAtom)
+        if noAtom >= limit:
+            noAtom = 0
+            neighbors = [
+                (y, x-1), (y, x+1), (y-1, x), (y+1, x)
+            ]
+            for ny, nx in neighbors:
+                if 0 <= ny < self.height and 0 <= nx < self.width:
+                    ncell:Cell = self.board[ny][nx]
+                    ncell.numberOfAtoms += 1
+                    self.updateCell(frontCell,noAtom)
+                    self.checkCellReaction(ncell,ny,nx)
         
             #sleep(0.5)
             #self.renderBoard();
