@@ -42,8 +42,12 @@ class Game:
             sys.stdout.write("\n")
 
     def updateCell(self, cell, atom, color):
-        cell.numberOfAtoms = atom
-        cell.color = cellColor[color]
+        if (cell.color == "" or cell.color == cellColor[color]):
+            cell.numberOfAtoms = atom
+            cell.color = cellColor[color]
+            return 1
+        else:
+            return 0
 
     def checkCellReaction(self, cell, y, x):
         frontCell: Cell = cell

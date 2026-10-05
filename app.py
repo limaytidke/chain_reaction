@@ -28,6 +28,8 @@ def board():
 
 @app.post("/sendCoord")
 def updateCell(coords: Coords):
-    game.addAtom([coords.row,coords.col,coords.color])
-    gameBoard = [[ [game.board[i][j].numberOfAtoms,game.board[i][j].color] for j in range(game.width)] for i in range(game.height)]
-    return { "updatedBoard" : gameBoard }
+    if (game.addAtom([coords.row,coords.col,coords.color]) == 0):
+        return { "updatedBoard" : 0 }
+    else:
+        gameBoard = [[ [game.board[i][j].numberOfAtoms,game.board[i][j].color] for j in range(game.width)] for i in range(game.height)]
+        return { "updatedBoard" : gameBoard }

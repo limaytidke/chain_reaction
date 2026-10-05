@@ -30,6 +30,10 @@ async function loadBoard() {
 async function updateBoard(row,col) {
     let playerCellColor = Color[playerColor];
     console.log(playerCellColor);
+    const targetDiv = document.querySelector(".game");
+    const buttons = targetDiv.querySelectorAll("button");
+    const buttonAccess = buttons[row * boardSize + col];
+
     const res = await fetch("/sendCoord" , {
         method : "POST",
         headers : {"Content-Type" : "application/json" },
@@ -37,17 +41,20 @@ async function updateBoard(row,col) {
     });
     const data = await res.json();
     const board = data.updatedBoard;
-    console.log(board);
-    playerColor = cellColor[(playerCellColor%2)+1];
+    if (board == "error") {
+        console.log("cell is not yours");
+    }
+    else {
+        console.log(board);
+        playerColor = cellColor[(playerCellColor%2)+1];
 
-    const targetDiv = document.querySelector(".game");
-    const buttons = targetDiv.querySelectorAll("button");
 
-    for (let row = 0; row < boardSize; row++) {
-        for (let col = 0; col < boardSize; col++) {
-            buttons[row * boardSize + col].innerText = board[row][col][0];
-            if (board[row][col][1] == "red") { buttons[row * boardSize + col].style.backgroundImage = "url('assets/red.png')"; }
-            else if (board[row][col][1] == "green") { buttons[row * boardSize + col].style.backgroundImage = "url('assets/green.png')"; }
+        for (let row = 0; row < boardSize; row++) {
+            for (let col = 0; col < boardSize; col++) {
+                buttons[row * boardSize + col].innerText = board[row][col][0];
+                if (board[row][col][1] == "red") { buttons[row * boardSize + col].style.backgroundImage = "url('assets/red.png')"; }
+                else if (board[row][col][1] == "green") { buttons[row * boardSize + col].style.backgroundImage = "url('assets/green.png')"; }
+            }
         }
     }
 }
