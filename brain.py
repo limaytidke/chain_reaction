@@ -6,6 +6,7 @@ from collections import deque
 class Cell:
     numberOfAtoms:int = 0
     atomLimit:int = 3
+    color:str = "" 
 
 class Game:
     def __init__(self,height:int = 10,width:int = 10) -> None:
@@ -47,8 +48,8 @@ class Game:
             #self.renderBoard();
 
 
-    def addAtom(self,coord:list[str]):
-        x,y = int(coord[0]),int(coord[1])
+    def addAtom(self,coord:list[int]):
+        y,x = coord[0],coord[1]
         cell = self.board[y - 1][x - 1]
         self.updateCell(cell=cell,atom=cell.numberOfAtoms + 1)
         self.checkCellReaction(cell,y - 1,x - 1)

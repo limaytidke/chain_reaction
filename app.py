@@ -7,13 +7,14 @@ from pydantic import BaseModel
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 
 game = Game()
 
 class Coords(BaseModel):
-    row: str
-    col: str
+    row: int
+    col: int
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
