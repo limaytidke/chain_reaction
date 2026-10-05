@@ -15,6 +15,7 @@ game = Game()
 class Coords(BaseModel):
     row: int
     col: int
+    color: int
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
@@ -27,6 +28,6 @@ def board():
 
 @app.post("/sendCoord")
 def updateCell(coords: Coords):
-    game.addAtom([coords.row,coords.col])
-    gameBoard = [[ game.board[i][j].numberOfAtoms for j in range(game.width)] for i in range(game.height)]
+    game.addAtom([coords.row,coords.col,coords.color])
+    gameBoard = [[ [game.board[i][j].numberOfAtoms,game.board[i][j].color] for j in range(game.width)] for i in range(game.height)]
     return { "updatedBoard" : gameBoard }
